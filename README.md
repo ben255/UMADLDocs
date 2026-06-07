@@ -1,2 +1,2 @@
-# UMAD-L-Docs
-Documentation for UMAD-L
+# UMADLDocs
+Documentation for UMADL
