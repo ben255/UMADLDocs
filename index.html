@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMADL Documentation</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --sidebar-bg: #ffffff;
+            --text-main: #24292e;
+            --text-muted: #586069;
+            --primary: #0366d6;
+            --border: #eaecef;
+        }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+        }
+        #sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+        #sidebar h2 {
+            font-size: 1.25rem;
+            padding: 0 20px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            text-align: left;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-button:hover {
+            color: var(--primary);
+            background-color: #f1f8ff;
+        }
+        .nav-button.active {
+            color: var(--primary);
+            font-weight: 600;
+            border-right: 3px solid var(--primary);
+            background-color: #f1f8ff;
+        }
+        #main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: #ffffff;
+        }
+        .content-container {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        /* Basic styling for loaded page content */
+        .content-container h1, .content-container h2 {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3em;
+            margin-bottom: 16px;
+        }
+        .content-container code {
+            background-color: rgba(27,31,35,0.05);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <nav id="sidebar">
+        <h2>UMADL Docs</h2>
+        <div id="nav-links">
+            <!-- Buttons will be injected here by JavaScript -->
+        </div>
+    </nav>
+    
+    <main id="main-content">
+        <div class="content-container" id="content-area">
+            <!-- Content from the pages folder will load here -->
+        </div>
+    </main>
+
+    <script>
+        // --- CONFIGURATION ---
+        // Easy way to add new files! 
+        // Just add a new line here with the button title and the filename in the 'pages' folder.
+        const docPages = [
+            { title: "Introduction", file: "intro.html" },
+            { title: "Getting Started", file: "getting-started.html" }
+        ];
+        // ---------------------
+
+        const navLinksContainer = document.getElementById('nav-links');
+        const contentArea = document.getElementById('content-area');
+
+        function init() {
+            docPages.forEach((page, index) => {
+                // Create the button for the side panel
+                const button = document.createElement('button');
+                button.className = 'nav-button';
+                button.textContent = page.title;
+                button.onclick = () => loadContent(page.file, button);
+                navLinksContainer.appendChild(button);
+
+                // Load the first page automatically as the landing page
+                if (index === 0) {
+                    loadContent(page.file, button);
+                }
+            });
+        }
+
+        async function loadContent(filename, activeBtn) {
+            try {
+                // Fetch the HTML file from the 'pages' directory
+                const response = await fetch(`pages/${filename}`);
+                if (!response.ok) throw new Error(`Status: ${response.status}`);
+                
+                const html = await response.text();
+                contentArea.innerHTML = html;
+
+                // Update the active button styling in the sidebar
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                if (activeBtn) {
+                    activeBtn.classList.add('active');
+                }
+            } catch (error) {
+                contentArea.innerHTML = `<h2>Error</h2><p>Could not load <code>pages/${filename}</code>. Make sure the file exists.</p>`;
+                console.error("Error fetching page:", error);
+            }
+        }
+
+        // Run the script
+        init();
+    </script>
+</body>
+</html>
