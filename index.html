@@ -22,8 +22,8 @@
             background-color: var(--bg-color);
         }
         #sidebar {
-            width: 260px;
-            min-width: 260px;
+        width: 200px;
+        min-width: 200px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             display: flex;
@@ -63,10 +63,18 @@
             padding: 40px;
             overflow-y: auto;
             background: #ffffff;
+        display: flex;
+        flex-direction: column;
+    }
+    #main-content::before,
+    #main-content::after {
+        content: "";
+        flex: 1;
         }
         .content-container {
             max-width: 800px;
-            margin: 0 auto;
+        width: 100%;
+        margin: 0 auto;
             line-height: 1.6;
         }
         /* Basic styling for loaded page content */
@@ -81,6 +89,22 @@
             border-radius: 3px;
             font-family: monospace;
         }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        body {
+            flex-direction: column;
+        }
+        #sidebar {
+            width: 100%;
+            min-width: 100%;
+            border-right: none;
+            border-bottom: 1px solid var(--border);
+        }
+        #main-content {
+            padding: 20px;
+        }
+    }
     </style>
 </head>
 <body>
@@ -103,7 +127,8 @@
         // Just add a new line here with the button title and the filename in the 'pages' folder.
         const docPages = [
             { title: "Introduction", file: "intro.html" },
-            { title: "Getting Started", file: "getting-started.html" }
+            { title: "Getting Started", file: "getting-started.html" },
+            { title: "Node Tree Structure", file: "node-tree.html" }
         ];
         // ---------------------
 
